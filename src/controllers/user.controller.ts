@@ -43,8 +43,10 @@ const registerUser = asyncHandler(async function (
     res: Response,
     next: NextFunction
 ) {
+    console.log(req.body);
     const { _id, name, email, photo, gender, dob, password } = req.body;
 
+    
     // Validate input
     if ([_id, name, email, photo, gender, dob, password].some(field => !field?.toString().trim())) {
         return next(new ApiError(400, "Please fill in all fields"));
@@ -80,7 +82,7 @@ const login = asyncHandler(async function (req, res, next) {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) return next(new ApiError(404, "User not found"));
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    const isValidPassword = await user.validatePassword(password)
     if (!isValidPassword) return next(new ApiError(401, "Invalid password"));
     const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id);
     setTokenCookies(res, accessToken, refreshToken);

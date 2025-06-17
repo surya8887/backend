@@ -3,10 +3,8 @@ import validator from "validator";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-
 dotenv.config({ path: ".env" });
 
-// Extend IUser with methods
 export interface IUser extends Document {
   _id: string;
   name: string;
@@ -98,11 +96,13 @@ userSchema.pre<IUser>("save", async function (next) {
 });
 
 // Method: Validate password
-userSchema.methods.validatePassword = async function (
-  this: IUser,
-  inputPassword: string
-): Promise<boolean> {
-  return bcrypt.compare(inputPassword, this.password);
+userSchema.methods.validatePassword = async function (inputPassword: string): Promise<boolean> {
+  try {
+    return await bcrypt.compare(inputPassword, this.password);
+  } catch (err) {
+    console.error('Password validation error:', err);
+    return false;
+  }
 };
 
 // Method: Generate Access Token

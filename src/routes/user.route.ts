@@ -16,3 +16,7 @@ router.route('/alldata').get(verifyJWT,adminOnly,getAllUser);
 
 
 export default router;
+
+
+
+

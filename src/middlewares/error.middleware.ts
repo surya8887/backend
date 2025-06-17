@@ -1,7 +1,12 @@
-import { ErrorRequestHandler,Request,Response, NextFunction } from "express";
+import { ErrorRequestHandler, Request, Response, NextFunction } from "express";
 import ApiError from "../utils/ApiError.js";
 
-const ErrorMiddleware: ErrorRequestHandler = (err:ApiError, req:Request, res:Response, next:NextFunction): void => {
+const ErrorMiddleware: ErrorRequestHandler = (
+  err: ApiError,
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   const statusCode = err instanceof ApiError ? err.statusCode : 500;
   const message = err.message || "Internal Server Error";
   const errors = err instanceof ApiError ? err.errors : [];
@@ -9,8 +14,8 @@ const ErrorMiddleware: ErrorRequestHandler = (err:ApiError, req:Request, res:Res
   const response: any = {
     success: false,
     message,
-    errors,
     data,
+    // errors,
   };
 
   if (process.env.NODE_ENV === "development") {
