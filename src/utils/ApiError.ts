@@ -15,15 +15,8 @@ class ApiError extends Error {
         this.data = null;
         this.success = false;
         this.errors = errors;
-
-        // Ensure the name and message from Error are preserved
-        this.name = this.constructor.name;
         this.message = message;
 
-        // Set the prototype explicitly
-        Object.setPrototypeOf(this, ApiError.prototype);
-
-        // Capture or set the stack trace
         if (stack) {
             this.stack = stack;
         } else {
